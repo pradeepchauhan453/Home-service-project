@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Contracts\Auth\Authenticatable;
+
 uses(Tests\TestCase::class)->in('Feature');
 
 /*
@@ -43,3 +45,12 @@ function something()
 {
     // ..
 }
+
+function actingAs(Authenticatable $user)
+{
+    return test()->actingAs($user);
+}
+
+expect()->extend('toBeRedirectedFor', function(string $url, string $method = 'get'){
+    return actingAs($this->value)->{$method}($url)->assertStatus(302);
+});
